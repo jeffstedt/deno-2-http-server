@@ -1,0 +1,7 @@
+{
+  "deno.enable": true,
+  "[typescript]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features",
+    "editor.formatOnSave": true
+  },
+}
