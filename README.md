@@ -1,4 +1,4 @@
-# Deno v2 Todo API
+# Deno v2 Todo API :beers:
 
 Battle testing Deno v2 with a simple REST API for managing todos.
 
