@@ -2,9 +2,10 @@ import { MemoDatabase } from "../database.ts";
 import { handleDelete, handleGet, handlePatch, handlePost } from "../controllers/index.ts";
 import { respond } from "../utilities.ts";
 
+const dbClient = new MemoDatabase();
 
-export async function router(req: Request, dbClient: MemoDatabase): Promise<Response> {
-  const { method, url } = req
+export async function router(req: Request): Promise<Response> {
+  const { method, url } = req;
   const { pathname } = new URL(url);
 
   if (pathname.startsWith("/api/todos") && method === "GET") {
@@ -16,7 +17,7 @@ export async function router(req: Request, dbClient: MemoDatabase): Promise<Resp
   } else if (pathname.startsWith("/api/todos") && method === "DELETE") {
     return handleDelete(req, dbClient);
   } else if (pathname === "/health") {
-    return respond({ status: "ok" })
+    return respond({ status: "ok" });
   }
 
   return new Response("Not found", { status: 404 });

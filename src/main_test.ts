@@ -1,8 +1,5 @@
 import { assertEquals, assertExists } from "@std/assert";
 import { router } from "./routes/router.ts";
-import { MemoDatabase } from "./database.ts";
-
-const dbClient = new MemoDatabase();
 
 const mockRequest = async (method: string, url: string, body: object = {}): Promise<Response> => {
   const init: RequestInit = {
@@ -11,7 +8,7 @@ const mockRequest = async (method: string, url: string, body: object = {}): Prom
   };
   if (method !== "GET") init.body = JSON.stringify(body);
   const req = new Request(url, init);
-  return await router(req, dbClient);
+  return await router(req);
 };
 
 // Happy case tests
@@ -45,6 +42,12 @@ methods.forEach((method) => {
     assertEquals(data.text, newTodo.text);
     assertExists(data.id);
   });
+});
+
+Deno.test("POST /api/todos/share shares a todo with a user", async () => {
+  const shareData = { todoId: 1, userId: 2 };
+  const response = await mockRequest("POST", "http://localhost:8080/api/todos/share", shareData);
+  await response.json();
 });
 
 Deno.test("DELETE /api/todos/:id archives a specific todo", async () => {
