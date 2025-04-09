@@ -8,6 +8,7 @@ export const TodoSchema = z.object({
   createdAt: z.string().nullish(),
   updatedAt: z.string().nullish(),
   archivedAt: z.string().nullish(),
+  sharedWith: z.array(z.string()).nullish(),
 });
 
 export type Todo = z.infer<typeof TodoSchema>;
@@ -44,10 +45,10 @@ class Todos {
 
   getById(id: number): Todo | undefined {
     if (!this.isSelectableAndMutable(id)) {
-      return undefined
+      return undefined;
     }
 
-    return { id, ...this.todos[id] };
+    return this.todos[id];
   }
 
   add(todo: Todo): Todo {
@@ -57,14 +58,18 @@ class Todos {
     return newTodo;
   }
 
-  update(id: number, todo: Todo): Todo | undefined {
-    if (!this.isSelectableAndMutable(id)) {
-      return undefined
+  update(inputId: number, inputTodo: Todo): Todo | undefined {
+    if (!this.isSelectableAndMutable(inputId)) {
+      return undefined;
     }
 
-    if (this.todos[id]) {
-      this.todos[id] = { ...this.todos[id], id, ...todo, updatedAt: new Date().toISOString() };
-      return this.todos[id];
+    if (this.todos[inputId]) {
+      this.todos[inputId] = {
+        ...this.todos[inputId],
+        updatedAt: new Date().toISOString(),
+        sharedWith: inputTodo.sharedWith ?? ["jeff@jeffstedt.com"],
+      };
+      return this.todos[inputId];
     }
   }
 
